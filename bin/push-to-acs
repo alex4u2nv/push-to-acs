@@ -52,7 +52,7 @@ validate_path(args.folder)
 
 def main():
     path = args.folder
-    auth = Authenticate(base_url=args.base_url, username=args.username, password=args.password)
+    auth = Authenticate(base_url=args.base_url, username=args.username, password=password)
     pushcontent = PushContent(auth, args.base_url, args.destination, args.remove)
     event_handler = EventsHandler(pushcontent)
     observer = Observer()
