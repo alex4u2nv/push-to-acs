@@ -1,0 +1,82 @@
+#!/usr/bin/env python3
+"""
+Monitor a directory for new files created, and upload them to ACS
+"""
+import argparse
+import getpass
+import os
+import logging
+import sys
+import time
+from daemons import daemonizer
+
+from watchdog.observers import Observer
+
+from push_content.PushContent import *
+import daemon
+
+assert sys.version_info >= (3, 2)
+
+help = "Monitor a folder for new files, and move those files to ACS"
+
+parser = argparse.ArgumentParser(description=help)
+
+parser.add_argument("--daemon", help="Run in the background",
+                    action="store_true")
+
+parser.add_argument("-a", "--base_url", help="Path to ACS. For example https://localhost/", required=True)
+parser.add_argument("-f", "--folder", help="Folder to monitor", required=True)
+parser.add_argument("-u", "--username", help="ACS Username", required=True)
+parser.add_argument("-p", "--password", help="ACS Password")
+parser.add_argument("-d", "--destination", help="Repository Folder Node ID")
+parser.add_argument("-r", "--remove", help="Remove file after upload", action="store_true")
+
+args = parser.parse_args()
+
+if args.daemon:
+    logging.basicConfig(level=logging.INFO,
+                        format='%(asctime)s - %(message)s',
+                        datefmt='%Y-%m-%d %H:%M:%S',
+                        filename='push-to-acs.log')
+else:
+    logging.basicConfig(level=logging.INFO,
+                        format='%(asctime)s - %(message)s',
+                        datefmt='%Y-%m-%d %H:%M:%S')
+
+password = args.password
+if password is None:
+    password = getpass.getpass()
+
+validate_path(args.folder)
+
+
+def main():
+    path = args.folder
+    auth = Authenticate(base_url=args.base_url, username=args.username, password=args.password)
+    pushcontent = PushContent(auth, args.base_url, args.destination, args.remove)
+    event_handler = EventsHandler(pushcontent)
+    observer = Observer()
+    observer.schedule(event_handler, path, recursive=False)
+    observer.start()
+    try:
+        while True:
+            time.sleep(1)
+            # check if token needs to be refreshed every 5 seconds
+            if not int(time.time()) % 5:
+                auth.get_jwt()
+    except KeyboardInterrupt:
+        observer.stop()
+    observer.join()
+
+
+if __name__ == "__main__":
+    if args.daemon:
+        myname = os.path.basename(sys.argv[0])
+        pidfile = '/tmp/%s' % myname
+        logging.info('Starting as daemon {name}'.format(name=myname))
+        @daemonizer.run(pidfile="/tmp/sleepy.pid")
+        def run():
+            main()
+        run()
+    else:
+        main()
