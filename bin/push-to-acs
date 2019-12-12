@@ -74,7 +74,7 @@ if __name__ == "__main__":
         myname = os.path.basename(sys.argv[0])
         pidfile = '/tmp/%s' % myname
         logging.info('Starting as daemon {name}'.format(name=myname))
-        @daemonizer.run(pidfile="/tmp/sleepy.pid")
+        @daemonizer.run(pidfile="/tmp/{name}.pid".format(name=myname))
         def run():
             main()
         run()
