@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 import time
 
 import requests
@@ -11,12 +12,8 @@ from push_content.Auth import Authenticate
 
 class PushContent:
     acs = None
-    password = None
-    username = None
     destination = None
     remove = False
-    jwt = None
-    token_time = None
     auth = None
 
     def __init__(self, auth: Authenticate, base_url, destination, remove):
@@ -52,6 +49,8 @@ class PushContent:
             return None
 
         fileinfo = resp.json()
+        if self.remove:
+            os.remove(src_path)
         logging.info("File uploaded with nodeId: {nodeId}".format(nodeId=fileinfo['entry']['id']))
 
 
