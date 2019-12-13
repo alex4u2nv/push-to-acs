@@ -1,11 +1,8 @@
-import json
 import logging
 import os
-import time
 
 import requests
 from watchdog.events import FileSystemEventHandler
-import ntpath
 
 from push_content.Auth import Authenticate
 
@@ -28,10 +25,6 @@ class PushContent:
         token = self.auth.get_jwt()
         push_content_api = "{acs}/api/-default-/public/alfresco/versions/1/nodes/{destination}/children".format(
             acs=self.acs, destination=self.destination)
-        querystring = {"autoRename": "true", "include": "allowableOperations", "majorVersion": "true",
-                       "overwrite": "true"}
-
-        file_name = ntpath.basename(src_path)
 
         headers = {
             "authorization": "Bearer {jwt}".format(jwt=token)
