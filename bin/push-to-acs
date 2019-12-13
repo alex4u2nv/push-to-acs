@@ -5,6 +5,7 @@ Monitor a directory for new files created, and upload them to ACS
 import argparse
 import getpass
 import sys
+import time
 
 from daemons import daemonizer
 from watchdog.observers import Observer
