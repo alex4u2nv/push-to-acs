@@ -4,8 +4,6 @@ import time
 import requests
 
 
-
-
 class Authenticate:
     jwt = None
     token_time = None

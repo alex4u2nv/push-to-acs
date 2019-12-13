@@ -4,16 +4,12 @@ Monitor a directory for new files created, and upload them to ACS
 """
 import argparse
 import getpass
-import os
-import logging
 import sys
-import time
-from daemons import daemonizer
 
+from daemons import daemonizer
 from watchdog.observers import Observer
 
 from push_content.PushContent import *
-import daemon
 
 assert sys.version_info >= (3, 2)
 
