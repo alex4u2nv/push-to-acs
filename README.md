@@ -48,7 +48,7 @@ is good for upload.
 
 # Upload
 1. Currently you must use the Node ID's guid as your destination reference
-2. The ACS multidata form upload method is used
+2. The ACS multipart form upload method is used
 3. We allow for versioning a new document
 
 # Filesystem Monitoring
