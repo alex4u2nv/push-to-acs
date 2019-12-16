@@ -22,6 +22,14 @@ Then execute using the following command
 push-to-acs -a https://yourinstance.dev.alfrescocloud.com/ -f ~/test -u username -p YourPassword -d DESTIONATION-FOLDER-NODE-ID
 
 ```
+# Options
+* `-a or --base_url` Path to system. For example: https://yourhost.dev.alfrescocloud.com
+* `-f or --folder` Local Folder to monitor
+* `-u or --username` Service Account's Username
+* `[-p or --password]` Optionally, you can pass the password as an argument, otherwise the module will prompt you for it
+* `-d or --destination` The repository Node ID
+* `[-r or --remove]` Optionally remove the file after uploading
+* `[--daemon]` Optionally run this module as a daemon
 
 # Structure
 * `bin/push-to-acs` This is the python executable
